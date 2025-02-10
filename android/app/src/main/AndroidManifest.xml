@@ -42,4 +42,13 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
+    <receiver android:name=".YearProgressWidget" android:exported="true">
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            <action android:name="com.debojyoti.year_progress.UPDATE_WIDGET" />
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+            android:resource="@xml/year_progress_widget_info" />
+    </receiver>
 </manifest>

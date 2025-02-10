@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const YearProgressApp());
@@ -46,6 +47,15 @@ class YearProgressCard extends StatelessWidget {
   YearProgressCard({super.key});
 
   final DateTime now = DateTime.now();
+  static const platform = MethodChannel('com.debojyoti.year_progress/widget');
+
+  Future<void> _updateWidgetData() async {
+    try {
+      await platform.invokeMethod('updateWidgetData');
+    } on PlatformException catch (e) {
+      print("Failed to update widget data: '${e.message}'.");
+    }
+  }
 
   double calculateYearProgress() {
     final startOfYear = DateTime(now.year);
@@ -145,6 +155,11 @@ class YearProgressCard extends StatelessWidget {
               fontSize: 16,
               color: CupertinoColors.black,
             ),
+          ),
+          const SizedBox(height: 20),
+          CupertinoButton.filled(
+            onPressed: _updateWidgetData,
+            child: const Text('Add to Homescreen'),
           ),
         ],
       ),
