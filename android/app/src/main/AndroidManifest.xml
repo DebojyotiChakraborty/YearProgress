@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="year_progress"
+        android:label="Year Progress"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -30,6 +30,19 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <receiver 
+            android:name=".YearProgressWidget"
+            android:exported="true"
+            android:label="Year Progress">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.debojyoti.year_progress.UPDATE_WIDGET" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/year_progress_widget_info" />
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
@@ -42,13 +55,4 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
-
-    <receiver android:name=".YearProgressWidget" android:exported="true">
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            <action android:name="com.debojyoti.year_progress.UPDATE_WIDGET" />
-        </intent-filter>
-        <meta-data android:name="android.appwidget.provider"
-            android:resource="@xml/year_progress_widget_info" />
-    </receiver>
 </manifest>

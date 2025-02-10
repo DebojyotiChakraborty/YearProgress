@@ -5,10 +5,11 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
 import java.util.Calendar
-import android.content.SharedPreferences
-import android.net.Uri
+import java.text.SimpleDateFormat
+import java.util.Locale
 import android.content.Intent
-import android.os.Build
+import android.view.View
+import android.widget.LinearLayout
 
 class YearProgressWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -47,11 +48,27 @@ class YearProgressWidget : AppWidgetProvider() {
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     val progress = calculateYearProgress()
     val progressInt = progress.toInt()
+    val now = Calendar.getInstance()
+    
+    val dateFormat = SimpleDateFormat("dd'th' MMMM yyyy", Locale.getDefault())
+    val dateStr = dateFormat.format(now.time)
 
-    // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.year_progress_widget)
     views.setTextViewText(R.id.appwidget_text, "$progressInt%")
-    views.setProgressBar(R.id.progressBar, 100, progressInt, false)
+    views.setTextViewText(R.id.date_text, "Date    $dateStr")
+    views.setTextViewText(R.id.progress_text, "${now.get(Calendar.YEAR)} is ${String.format("%.3f", progress)}% complete")
+
+    // Create progress indicators
+    val progressBars = LinearLayout(context)
+    val totalBars = 35
+    val completedBars = (progress / 100.0 * totalBars).toInt()
+
+    for (i in 0 until totalBars) {
+        val barView = View(context)
+        barView.id = View.generateViewId()
+        views.setInt(barView.id, "setBackgroundResource",
+            if (i < completedBars) R.drawable.progress_bar_item else android.R.color.darker_gray)
+    }
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -60,8 +77,14 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 fun calculateYearProgress(): Double {
     val now = Calendar.getInstance()
     val year = now.get(Calendar.YEAR)
-    val startOfYear = Calendar.getInstance().apply { set(year, 0, 1, 0, 0, 0) } // January 1st, 00:00:00
-    val endOfYear = Calendar.getInstance().apply { set(year + 1, 0, 1, 0, 0, 0) } // January 1st of next year, 00:00:00
+    val startOfYear = Calendar.getInstance().apply { 
+        set(year, 0, 1, 0, 0, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+    val endOfYear = Calendar.getInstance().apply { 
+        set(year + 1, 0, 1, 0, 0, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
 
     val totalSeconds = (endOfYear.timeInMillis - startOfYear.timeInMillis) / 1000.0
     val secondsPassed = (now.timeInMillis - startOfYear.timeInMillis) / 1000.0

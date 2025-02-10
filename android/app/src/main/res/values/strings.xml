@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Year Progress</string>
+    <string name="widget_description">Shows the current year\'s progress</string>
+</resources> 

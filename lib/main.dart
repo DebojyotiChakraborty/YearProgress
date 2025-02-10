@@ -74,7 +74,7 @@ class YearProgressCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: CupertinoColors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: CupertinoColors.systemGrey.withOpacity(0.1),
@@ -111,37 +111,20 @@ class YearProgressCard extends StatelessWidget {
                 ],
               ),
               Container(
-                width: 60,
-                height: 60,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: CupertinoColors.systemGrey6,
                 ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CustomPaint(
-                          painter: CircularProgressPainter(
-                            progress: progress / 100,
-                            progressColor: CupertinoColors.systemGreen,
-                            backgroundColor: CupertinoColors.systemGrey5,
-                          ),
-                        ),
-                      ),
+                child: Center(
+                  child: Text(
+                    '$progressInt%',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Center(
-                      child: Text(
-                        '$progressInt%',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -157,9 +140,12 @@ class YearProgressCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          CupertinoButton.filled(
-            onPressed: _updateWidgetData,
-            child: const Text('Add to Homescreen'),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoButton.filled(
+              onPressed: _updateWidgetData,
+              child: const Text('Add to Homescreen'),
+            ),
           ),
         ],
       ),
